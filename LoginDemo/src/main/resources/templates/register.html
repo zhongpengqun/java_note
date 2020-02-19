@@ -1,0 +1,36 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>注册</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/register.css">
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+    <form action="/register" method="post">
+        <div class="alert alert-danger" role="alert" th:if="${msg}" th:text="${msg}"></div>
+        <div class="form-group">
+            <label for="username">用户名</label>
+            <input type="text" class="form-control" id="username" name="username" aria-describedby="username" placeholder="请输入用户名" required>
+        </div>
+        <div class="form-group">
+            <label for="password">密码</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码" required>
+        </div>
+        <div class="form-group">
+            <label for="repassword">确认密码</label>
+            <input type="password" class="form-control" id="repassword" name="repassword" placeholder="请确认密码" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">注册</button>
+    </form>
+</div>
+
+</body>
+
+</html>

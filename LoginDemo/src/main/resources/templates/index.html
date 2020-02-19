@@ -1,0 +1,27 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>首页</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+</head>
+
+<body>
+
+<div class="container mt-5">
+    <h3>这是首页</h3>
+    <div th:if="${session.user != null}">
+        <p>欢迎登录 <span th:text="${session.user}"></span></p>
+        <a href="/logout">退出登录</a>
+    </div>
+    <div th:if="${session.user == null}">
+        <a href="/login">登录</a>
+        <a href="/register">注册</a>
+    </div>
+</div>
+
+</body>
+
+</html>
