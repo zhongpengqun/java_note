@@ -1,0 +1,29 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="span6">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="/">Home</a></li>
+                <li><a href="/words">单词表</a></li>
+                <li><a href="/register">注册</a></li>
+                <li><a href="/login">登录 </a></li>
+                <li><a href="/logout">退出</a></li>
+            </ul>
+        </div>
+    </div>
+
+<@block name="content">base_content</@block>
+</div>
+</body>
+
+</html>
