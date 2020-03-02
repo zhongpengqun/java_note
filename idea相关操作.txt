@@ -1,0 +1,85 @@
+// maven下载包太慢解决方法
+找到maven的settings文件，mirrors标签中添加该阿里镜像
+<mirror>
+    <id>alimaven</id>
+    <mirrorOf>central</mirrorOf>
+    <name>aliyun maven</name>
+    <url>http://maven.aliyun.com/nexus/content/repositories/central/</url>
+</mirror>
+
+// JRebel热部署在idea中不起作用，折腾了老子2天，靠
+----------看看setting 里面是不是设置的在线，是的话，会定期去请求jrebel服务器，会导致破解失败的。。设置成离线模式试试
+----------1. IDEA 中安装JRebel插件
+ File -> Settings -> Plugins -> Browse repositories 中 搜索 JRebel，安装 JRebel for IntelliJ 插件即可。
+
+ 破解可以参考这篇文章：https://www.jianshu.com/p/c50...
+
+ 2. 配置JRebel Maven插件
+ 官方文档：https://manuals.zeroturnaroun...
+ JRebel Maven插件的目的是在Maven构建期间为您的项目生成rebel.xml文件。
+
+ 对于Maven项目 特别是在多模块项目的情况下 使用JRebel Maven插件生成rebel.xml配置文件很方便。将以下代码段添加到您的父级pom.xml。该rebel.xml配置文件可以在你的Maven项目的每个单独的子模块产生。
+
+ <plugin>
+     <groupId>org.zeroturnaround</groupId>
+     <artifactId>jrebel-maven-plugin</artifactId>
+     <version>1.1.8</version>
+     <configuration>
+         <!-- 将配置的资源目录也添加到rebel.xml中 -->
+         <addResourcesDirToRebelXml>true</addResourcesDirToRebelXml>
+         <!--如果设置为true，则生成的rebel.xml将在构建期间在控制台中打印出来，可以立即看到生成的内容。默认为false-->
+         <showGenerated>true</showGenerated>
+         <!-- 每次都生成新的rebel.xml。如果为false，只在rebel.xml和pom.xml的时间戳不相同的时候，重新生成rebel.xml。默认为false -->
+         <!--<alwaysGenerate>true</alwaysGenerate>-->
+         <!-- 在单个项目中处理多个模块时，您可以选择跳过为特定模块生成rebel.xml。 只需将以下内容添加到他们的pom.xml中即可 -->
+         <!--<skip>true</skip>-->
+         <!-- 如果工程师自己自定义的package，则需要主动设置为 jar 或者 war -->
+         <!--<packaging>war</packaging>-->
+     </configuration>
+     <executions>
+         <execution>
+             <id>generate-rebel-xml</id>
+             <phase>process-resources</phase>
+             <goals>
+                 <goal>generate</goal>
+             </goals>
+         </execution>
+     </executions>
+ </plugin>
+ 配置结束后执行命令mvn jrebel:generate
+
+ 3. 启动
+ 启动时使用 JRebel 按钮来Run和Debug，会自动在 resources 文件夹中生成rebel.xml文件，文件中配置了Jrebel热加载的时候需要追踪的文件路径及web配置。比如自己需要主动加入 shop-model 模块的路径
+
+ <?xml version="1.0" encoding="UTF-8"?>
+
+ <!--
+   This is the JRebel configuration file. It maps the running application to your IDE workspace, enabling JRebel reloading for this project.
+   Refer to https://manuals.zeroturnaround.com/jrebel/standalone/config.html for more information.
+ -->
+ <application generated-by="intellij" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.zeroturnaround.com" xsi:schemaLocation="http://www.zeroturnaround.com http://update.zeroturnaround.com/jrebel/rebel-2_1.xsd">
+
+     <classpath>
+         <dir name="C:/workspace/song/shop/shop-web/target/classes">
+         </dir>
+         <dir name="C:/workspace/song/shop/shop-model/target/classes">
+         </dir>
+     </classpath>
+
+     <web>
+         <link target="/">
+             <dir name="C:/workspace/song/shop/shop-web/src/main/webapp">
+             </dir>
+         </link>
+     </web>
+
+ </application>
+ 4. 最后的配置
+ 如果不做下面的配置，则需要手动编译才会触发热部署（spring boot devtools一样的问题）：
+
+ 到设置里将 project automatically 勾选上：File -> Settings -> Build,… -> Compiler ,勾选 Build project automatically
+ Intellij IEDA 使用 ctrl + shift + alt + / 快捷键选择 Registry... ，勾选 compiler.automake.allow.when.app.running
+ 5. 推荐用法
+ 一般修改java文件后，会自动编译的。但是一般自己主动触发编译会更可控一些：
+
+ Ctrl + Shift + F9 编译当前文件 或者 右键-> Recompile ....java

@@ -16,3 +16,11 @@ password  VARCHAR(200) NOT NULL,
 token  VARCHAR(200),
 created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE user_learned_words (
+id SERIAL PRIMARY KEY,
+user_id  INTEGER,
+word_id INTEGER,
+created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+ALTER TABLE user_learned_words ADD CONSTRAINT uc_uid_wid UNIQUE (user_id, word_id);
